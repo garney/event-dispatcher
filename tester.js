@@ -1,19 +1,5 @@
-# event-dispatcher
-Super class to dispatch events
-
-## Background
-I wanted to create a  class to handle my events that's not shared globally
-
-## Installation
-
-```bash
-npm install --save-dev event-dispatcher
-```
-
-## Usage
-
-```js
-import EventDispatcher from 'event-dispatcher';
+// import EventDispatcher from 'event-dispatcher';
+const EventDispatcher = require('./dist/index');
 
 class CountDown extends EventDispatcher {
     constructor(num = 10) {
@@ -51,5 +37,3 @@ myCounter.addEventListener(CountDown.Events.WOOHOO, () => {
 });
 
 myCounter.start();
-
-```
