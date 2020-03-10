@@ -1,3 +1,4 @@
+import UUID from './uuid';
 class EventDispatcher {
     constructor() {
         this.listeners = {};
@@ -7,9 +8,13 @@ class EventDispatcher {
         const self = this;
         return new Promise(resolve => {
             const listener = self.listeners[event] || [];
-            listener.push(callback);
+            const id = UUID.generate();
+            listener.push({
+                id,
+                callback
+            });
             self.listeners[event] = listener;
-            resolve();
+            resolve(id);
         });
 
     }
@@ -20,12 +25,37 @@ class EventDispatcher {
             const listener = self.listeners[event];
             if(listener) {
                 listener.forEach(cb => {
-                    cb.apply(null, params);
+                    cb.callback.apply(null, params);
                 })
             } else {
                 resolve(false);
             }
         });
+    }
+
+    removeEventListeners(event) {
+        delete this.listeners[event];
+    }
+
+    removeEventListener(event, id) {
+        let found = false;
+        let listeners =  this.listeners[event];
+        if(listeners) {
+            listeners = listeners.filter(item => {
+                return item.id !== id;
+            });
+            found = this.listeners.length !== listeners.length
+            this.listeners[event] = listeners;
+        }
+        return found;
+    }
+
+    removeEventListenerById(id) {
+        let found = false;
+        for (const prop in this.listeners) {
+            found = this.removeEventListener(prop, id)
+        }
+        return found;
     }
 }
 

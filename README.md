@@ -39,11 +39,28 @@ CountDown.Events = {
     TICK: 'TICK',
     WOOHOO: 'WOOHOO'
 };
-
+let eventId, eventId2;
 const myCounter = new CountDown(10);
-
-myCounter.addEventListener(CountDown.Events.TICK, (data) => {
+const cb = (data) => {
     console.log(data);
+    // if(data === 6) {
+    //     myCounter.removeEventListeners(CountDown.Events.TICK);
+    // }
+    if(data === 3) {
+        console.log(myCounter.removeEventListenerById(eventId));
+    }
+    if(data === 5) {
+        console.log(myCounter.removeEventListener(CountDown.Events.TICK, eventId2));
+    }
+};
+myCounter.addEventListener(CountDown.Events.TICK, cb).then(id => {
+    console.log('event id', id);
+    eventId = id;
+});
+
+myCounter.addEventListener(CountDown.Events.TICK, cb).then(id => {
+    console.log('event2 id', id);
+    eventId2 = id;
 });
 
 myCounter.addEventListener(CountDown.Events.WOOHOO, () => {
